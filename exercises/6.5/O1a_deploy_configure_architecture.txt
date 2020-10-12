@@ -3,15 +3,15 @@
 # REQUIRED SETUP: /
 
 # Download the the exam version of Elasticsearch
-# Deploy the cluster `eoc-01-cluster`, so that it satisfies the following requirements: (i) has three nodes, named `node1`, `node2`, and `node3`, (ii) all nodes are eligible master nodes
-# Bind `node1` to the IP address “151.101.2.217” and port “9201”
-# Bind `node2` to the IP address “151.101.2.218” and port “9202”
-# Bind `node3` to the IP address “151.101.2.219” and port “9203”
-# Configure the cluster discovery module of `node2` and `node3` so as to use `node1` as seed host
+# Deploy the cluster `eoc-01-cluster`, so that it satisfies the following requirements: (i) has three nodes, named `elastic-node-1`, `elastic-node-2`, and `elastic-node-3`, (ii) all nodes are eligible master nodes
+# Bind `elastic-node-1` to the IP address “192.168.5.11” and port “9201”
+# Bind `elastic-node-2` to the IP address “192.168.5.12” and port “9202”
+# Bind `elastic-node-3` to the IP address “192.168.5.13” and port “9203”
+# Configure network to use lo and eth1
 # Configure the nodes to avoid the split brain scenario
-# Configure `node1` to be a data node but not an ingest node
-# Configure `node2` and `node3` to be both an ingest and data node
-# Configure `node1` to disallow swapping on its host
-# Configure the JVM settings of each node so that it uses a minimum and maximum of 8 GB for the heap
+# Configure `elastic-node-1` to be a data node but not an ingest node
+# Configure `elastic-node-2` and `elastic-node-3` to be both an ingest and data node
+# Configure `elastic-node-1` to disallow swapping on its host
+# Configure the JVM settings of each node so that it uses a minimum and maximum of 2 GB for the heap
 # Configure the logging settings of each node so that (i) the logs directory is not the default one, (ii) the log level for transport-related events is set to "debug"
 # Configure the nodes so as to disable the possibility to delete indices using wildcards
