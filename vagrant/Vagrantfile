@@ -63,6 +63,8 @@ Vagrant.configure("2") do |config|
         node.vm.network :private_network, ip: IP_NW + "#{NODE_IP_START + i}", hostname: true
         node.vm.network "forwarded_port", guest: 22, host: "#{2710 + i}"
         node.vm.network "forwarded_port", guest: "#{9200 +i}", host: "#{9200 +i}"
+        # kibana
+        node.vm.network "forwarded_port", guest: "#{5600 +i}", host: "#{5600 +i}"
 
         node.vm.provision "setup-hosts", :type => "shell", :path => "scripts/setup-hosts.sh" do |s|
           s.args = ["eth1"]

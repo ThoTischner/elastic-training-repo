@@ -1,8 +1,10 @@
+# Install via rpm..
+
 # New elastic log path
 mkdir /var/log/elastic-logs
 chown elasticsearch:elasticsearch !$
 
-# Config
+# Elastic Config
 cluster.name: eoc-01-cluster
 node.name: elastic-node-X
 node.master: true
@@ -11,9 +13,11 @@ node.ingest: {true,false}
 path.data: /var/lib/elasticsearch
 path.logs: /var/log/elastic-logs
 logger.org.elasticsearch.transport: debug
-network.host:
+# elastic internal communcation via private network
+network.publish_host:
 - _eth1_
-- _lo_
+# public api on all networks
+network.bind_host: 0
 http.port: 920X
 discovery.seed_hosts: ["elastic-node-1", "elastic-node-2", "elastic-node-3"]
 cluster.initial_master_nodes: ["elastic-node-1", "elastic-node-2", "elastic-node-3"]
@@ -24,5 +28,6 @@ action.destructive_requires_name: true
 sudo swapoff -a
 sed -i 's|/swapfile|#/swapfile|' /etc/fstab
 
-# heap
-sed -i 's|Xms1g|Xms2g|' /etc/elasticsearch/jvm.options
+# change if you want more heap
+sed -i 's|Xms1g|Xms1g|' /etc/elasticsearch/jvm.options
+sed -i 's|Xmx1g|Xmx1g|' /etc/elasticsearch/jvm.options

@@ -3,12 +3,12 @@ A collection of datasets, docker-compose files, notes, and other training materi
 
 ----
 
-##Table of Contents
+## Table of Contents
 * Clusters-to-go - Collection of docker files to spin up Elasticsearch clusters
 * Datasets-to-go - Collection of datasets to populate your Elasticsearch clusters
 * Exercises - Collection of exercises to practice for the Elastic Certified Engineer exam
 
-##Vagrant setup
+## Vagrant setup
 You can manage three plain centos7 machines via:
 ```
   #go to vagrant dir
