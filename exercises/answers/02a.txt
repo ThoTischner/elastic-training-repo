@@ -1,0 +1,88 @@
+PUT /hamlet-raw
+{
+  "settings": {
+    "number_of_replicas": 4
+    , "number_of_shards": 1
+  }
+}
+
+POST /hamlet-raw/_doc/1
+{
+  "line": "To be, or not to be: that is the question"
+}
+
+POST /hamlet-raw/_update/1
+{ "doc":
+    {
+    "line_number": "3.1.64"
+    }
+}
+
+POST /hamlet-raw/_doc
+{
+  "text_entry": "Whether tis nobler in the mind to suffer",
+  "line_number": "3.1.66"
+}
+
+POST /hamlet-raw/_update/3tyhLHUBr_EEoSXlMRUk
+{
+  "doc":
+  {
+  "line_number": "3.1.65"
+  }
+}
+
+POST /hamlet-raw/_update_by_query
+{
+  "script": {
+    "source": "ctx._source.speaker = 'Hamlet'",
+    "lang": "painless"
+  },
+  "query": {
+    "match_all": {}
+  }
+}
+
+POST /hamlet-raw/_update_by_query
+{
+  "script": {
+    "source":"ctx._source.text_entry = ctx._source.remove(\"line\")"
+  },
+    "query": { "term":{
+      "_id": 1
+    } }
+}
+
+POST _scripts/set_is_hamlet
+{
+  "script": {
+    "lang": "painless",
+    "source": """
+      if (ctx._source.speaker == "HAMLET") {
+        ctx._source.is_hamlet = "true";
+      } else {
+        ctx._source.is_hamlet = "false";
+      }
+    """
+  }
+}
+
+POST /hamlet/_update_by_query
+{
+  "script": {
+    "id": "set_is_hamlet"
+  }
+}
+
+POST /hamlet/_delete_by_query
+{
+  "query":{
+    "query_string": {
+        "query": "(LAERTES) OR (KING CLAUDIUS)",
+        "default_field": "speaker"
+    }
+  }
+}
+
+DELETE /ham*
+

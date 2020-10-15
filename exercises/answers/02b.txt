@@ -1,0 +1,78 @@
+PUT _template/hamlet_template
+{
+  "index_patterns": ["hamlet_*", "hamlet-*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  }
+}
+
+PUT /hamlet2
+PUT /hamlet_test
+
+GET /hamlet2
+GET /hamlet_test
+
+DELETE /hamlet2,hamlet_test
+
+PUT _template/hamlet_template
+{
+  "index_patterns": ["hamlet_*", "hamlet-*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "properties": {
+      "speaker": {
+        "type": "keyword"
+      },
+      "text_entry": {
+        "type": "text",
+        "analyzer": "english"
+      },
+      "line_number": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+PUT _template/hamlet_template
+{
+  "index_patterns": ["hamlet_*", "hamlet-*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "speaker": {
+        "type": "keyword"
+      },
+      "text_entry": {
+        "type": "text",
+        "analyzer": "english"
+      },
+      "line_number": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+# Verify that you cannot index the following document in `hamlet-1`
+==>> Creation succeeded because template settings only take place on index creation..
+
+# need to configure index itself
+POST /hamlet-1/_mapping
+{
+  "dynamic": "strict"
+}
+
+
+POST /hamlet-1/_mapping
+{
+  "dynamic": "true"
+}

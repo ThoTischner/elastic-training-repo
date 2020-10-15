@@ -29,6 +29,53 @@ xpack.security.transport.ssl.truststore.path: elastic-node-X.p12
 
 # restart elastics
 
-# set password via
+# set built-in user passwords via
 /usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive
 
+# users / roles
+# francisco
+POST /_security/role/francisco_role
+{
+  "cluster": [ "monitor" ],
+  "indices": [
+    {
+      "names": [ "hamlet" ],
+      "privileges": [ "all" ]
+    }
+  ]
+}
+
+POST /_security/user/francisco
+{
+  "password": "francisco-password"
+  , "roles": ["francisco_role"]
+}
+
+# bernardo
+POST /_security/role/bernardo_role
+{
+  "cluster": ["monitor"],
+  "indices": [
+    {
+      "names": ["hamlet"],
+      "privileges": ["read"]
+      , "field_security": {
+        "grant": ["speaker", "text_entry"]
+
+      }
+      , "query": "{\"match\": {\"speaker\": \"BERNARDO\"}}"
+    }
+  ]
+}
+
+POST /_security/user/bernardo
+{
+  "password": "bernardo-password"
+  , "roles": ["bernardo_role"]
+}
+
+# update password
+POST /_security/user/bernardo
+{
+  "password": "poor-bernardo"
+}
