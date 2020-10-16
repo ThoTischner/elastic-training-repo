@@ -1,0 +1,108 @@
+PUT /hamlet-1
+{
+  "settings": {
+    "number_of_replicas": 0
+    , "number_of_shards": 2
+  }
+}
+
+PUT /hamlet-2
+{
+  "settings": {
+    "number_of_replicas": 0
+    , "number_of_shards": 2
+  }
+}
+
+POST /_aliases
+{
+    "actions" : [
+        { "add" : { "index" : "hamlet-1", "alias" : "hamlet" } },
+        { "add" : { "index" : "hamlet-2", "alias" : "hamlet" } }
+    ]
+}
+
+GET /hamlet/_search
+
+POST /_aliases
+{
+    "actions" : [
+        { "add" : { "index" : "hamlet-1", "alias" : "hamlet", "is_write_index": true } },
+        { "add" : { "index" : "hamlet-2", "alias" : "hamlet" } }
+    ]
+}
+
+PUT /hamlet/_doc/8
+{
+  "text_entry": "With turbulent and dangerous lunacy?",
+  "line_number": "3.1.4",
+  "speaker": "KING CLAUDIUS"
+}
+
+POST _scripts/control_reindex_batch
+{
+  "script": {
+    "lang": "painless",
+    "source": """
+      if (ctx._source.reindexBatch != null) {
+        ctx._source.reindexBatch = ctx._source.reindexBatch + params.increment;
+      } else {
+        ctx._source.reindexBatch = 0;
+      }
+    """,
+    "params": {
+      "increment": 1
+    }
+  }
+}
+
+# adhoc test script via
+POST /_scripts/painless/_execute
+{
+  "script": {
+    "source": """
+      if ("foo" != null) {
+        1 + params.increment;
+      } else {
+        0;
+      }
+    """,
+    "params": {
+      "increment": 1
+    }
+  }
+}
+
+PUT /hamlet-new
+{
+  "settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 0
+  }
+}
+
+POST _reindex?slices=2&refresh=false
+{
+  "source": {
+    "index": "hamlet"
+  },
+  "dest": {
+    "index": "hamlet-new"
+  },
+  "script": {
+    "id": "control_reindex_batch",
+    "params": {
+      "increment": 1
+    }
+  }
+}
+
+POST /_aliases
+{
+    "actions" : [
+        { "add":  { "index": "hamlet-new", "alias": "hamlet" } },
+        { "remove_index": { "index": "hamlet" } },
+        { "remove_index": { "index": "hamlet-2" } }
+    ]
+}
+

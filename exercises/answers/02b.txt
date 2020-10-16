@@ -76,3 +76,49 @@ POST /hamlet-1/_mapping
 {
   "dynamic": "true"
 }
+
+POST _template/hamlet_template
+{
+  "index_patterns": ["hamlet_*", "hamlet-*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "dynamic_templates": [{
+      "strings": {
+        "match_mapping_type": "string",
+        "mapping": {
+            "type": "keyword"
+      }}},
+        "as_numbers": {
+          "match_mapping_type": "*",
+          "match":   "number_*",
+          "mapping": {
+            "type": "integer"
+          }
+        }
+      }],
+    "properties": {
+      "speaker": {
+        "type": "keyword"
+      },
+      "text_entry": {
+        "type": "text",
+        "analyzer": "english"
+      },
+      "line_number": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+PUT /hamlet_10
+
+POST /hamlet-10/_doc
+{
+  "authorr": "Shakespeare"
+}
+
+GET /hamlet-10/_mapping/field/authorr
