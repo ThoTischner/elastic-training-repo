@@ -1,0 +1,214 @@
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "match_phrase": {
+      "message": "Firefox"
+    }
+  }
+}
+
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "match_phrase": {
+      "message": "Firefox"
+    }
+  },
+  "size": 50
+}
+
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "match_phrase": {
+      "message": "Firefox"
+    }
+  },
+  "from": 50,
+  "size": 50
+}
+
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "bool": {
+
+      "should": [
+
+        {"term": {
+          "message": "firefox"
+        }},
+        { "term": {
+          "message": "kibana"
+        }
+        }
+      ]
+
+    }
+  },
+  "from": 50,
+  "size": 50
+}
+
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "bool": {
+
+      "should": [
+
+        {"term": {
+          "message": "firefox"
+        }},
+        { "term": {
+          "message": "kibana"
+        }
+        },
+        {
+          "term": {
+            "message": {
+              "value": "159.64.35.129"
+            }
+          }
+        }
+      ],
+      "minimum_should_match": 2
+    }
+  },
+  "from": 50,
+  "size": 50
+}
+
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "bool": {
+
+      "should": [
+
+        {"term": {
+          "message": "firefox"
+        }},
+        { "term": {
+          "message": "kibana"
+        }
+        },
+        {
+          "term": {
+            "message": {
+              "value": "159.64.35.129"
+            }
+          }
+        }
+      ],
+      "minimum_should_match": 2
+    }
+  },
+  "highlight": {"fields": {"message": {}}},
+  "from": 50,
+  "size": 50
+}
+
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "bool": {
+
+      "should": [
+
+        {"term": {
+          "message": "firefox"
+        }},
+        { "term": {
+          "message": "kibana"
+        }
+        },
+        {
+          "term": {
+            "message": {
+              "value": "159.64.35.129"
+            }
+          }
+        }
+      ],
+      "minimum_should_match": 2
+    }
+  },
+  "highlight": {"fields": {"message": {}},
+    "pre_tags": "{{",
+    "post_tags": "}}"
+  },
+  "from": 50,
+  "size": 50
+}
+
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "match_phrase": {
+      "message": "HTTP/1.1 200 51"
+    }
+  }
+}
+
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "match_phrase": {
+      "message": "HTTP/1.1 200 51"
+    }
+  },
+  "sort": [
+    {
+      "machine.os.keyword": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+
+GET /kibana_sample_data_logs/_search
+{
+  "query": {
+    "match_phrase": {
+      "message": "HTTP/1.1 200 51"
+    }
+  },
+  "sort": [
+    {
+      "machine.os.keyword": {
+        "order": "desc"
+      }
+    },
+    {
+      "timestamp": {"order": "asc"}
+    }
+  ]
+}
+f
+GET /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "match": {
+      "day_of_week": "Monday"
+    }
+  }
+}
+
+GET /kibana_sample_data_ecommerce/_search
+{
+  "query": {
+    "match": {
+      "day_of_week": "Monday"
+    }
+  },
+  "sort": [
+    {
+      "products.base_price": {
+        "order": "desc",
+        "mode": "min"
+      }
+    }
+  ],
+  "size": 1
+}
