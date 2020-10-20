@@ -106,3 +106,88 @@ POST /_aliases
     ]
 }
 
+# test pipeline
+POST test/_doc/2?pipeline=drop_guests_network
+{
+  "foo" : "bar"
+}
+
+POST _ingest/pipeline/_simulate
+{
+  "pipeline": {
+    "description": "split_act_scene_line_simulate",
+    "processors": [
+      {
+        "split": {
+          "field": "line_number",
+          "separator": "\\."
+        }
+      },
+      {
+        "set": {
+          "field": "number_act",
+          "value": "{{ line_number.0 }}"
+        }
+      },
+      {
+        "set": {
+          "field": "number_scene",
+          "value": "{{ line_number.1 }}"
+        }
+      },
+      {
+        "set": {
+          "field": "number_line",
+          "value": "{{ line_number.2 }}"
+        }
+      }
+    ]
+  },
+  "docs": [
+    {
+      "_index": "index",
+      "_id": "id",
+      "_source": {
+        "line_number": "1.2.3"
+      }
+    }
+  ]
+}
+
+PUT _ingest/pipeline/split_act_scene_line
+{
+  "description": "split act scene line",
+  "processors": [
+    {
+        "split": {
+          "field": "line_number",
+          "separator": "\\."
+        }
+      },
+      {
+        "set": {
+          "field": "number_act",
+          "value": "{{ line_number.0 }}"
+        }
+      },
+      {
+        "set": {
+          "field": "number_scene",
+          "value": "{{ line_number.1 }}"
+        }
+      },
+      {
+        "set": {
+          "field": "number_line",
+          "value": "{{ line_number.2 }}"
+        }
+      }
+  ]
+}
+
+POST /hamlet-new/_update_by_query?pipeline=split_act_scene_line
+{
+  "query": {
+    "match_all": {}
+  }
+}
